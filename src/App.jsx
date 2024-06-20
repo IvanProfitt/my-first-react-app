@@ -4,6 +4,7 @@ import FormGeneral from './components/FormGeneral';
 import DisplayGeneral from './components/DisplayGeneral';
 import FormSchool from './components/FormSchool';
 import DisplaySchool from './components/DisplaySchool';
+import SchoolModal from './components/SchoolModal';
 
 function App() {
   const [generalInfo, setGeneralInfo] = useState({
@@ -23,6 +24,7 @@ function App() {
 
   const [submissions, setSubmissions] = useState([]);
   const [isEditing, setIsEditing] = useState(null);
+  const [showModa, setShowModal] = useState(false);
 
   const changeGenData = (e) => {
     const { name, value } = e.target;
@@ -34,7 +36,7 @@ function App() {
 
   const generalSubmit = (e) => {
     e.preventDefault();
-    // Handle general info submit logic if needed
+    setShowModal(true);
   };
 
   const changeEduData = (e) => {
@@ -76,7 +78,6 @@ function App() {
 
   return (
     <>
-    
     <div className='container'>
       <div id="left" className="formDiv">
       <FormGeneral
@@ -90,6 +91,12 @@ function App() {
         onSubmit={eduSubmit}
         editSubmission={editSubmission}
         deleteSubmission={deleteSubmission}
+        />
+        <SchoolModal
+        eduInfo={eduInfo}
+        editSubmission={editSubmission}
+        deleteSubmission={deleteSubmission}
+        submissions={submissions}
         />
       </div>
       <div id="right" className='resumeDiv'>

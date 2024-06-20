@@ -1,4 +1,4 @@
-import React from 'react';
+
 import PropTypes from 'prop-types';
 
 function FormSchool({ eduInfo, onChange, onSubmit }) {
@@ -57,13 +57,6 @@ function FormSchool({ eduInfo, onChange, onSubmit }) {
         </label>
         <button type="submit">Submit</button>
       </form>
-      {eduInfo.schoolName && (
-        <div>
-          <h3>{eduInfo.schoolName}</h3>
-          <button onClick={() => onSubmit({ ...eduInfo })}>Edit</button>
-          <button onClick={() => onSubmit(null)}>Delete</button>
-        </div>
-      )}
     </div>
   );
 }
