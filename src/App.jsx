@@ -5,6 +5,9 @@ import DisplayGeneral from './components/DisplayGeneral';
 import FormSchool from './components/FormSchool';
 import DisplaySchool from './components/DisplaySchool';
 import SchoolModal from './components/SchoolModal';
+import FormExperience from './components/FormExperience';
+import ExperienceModal from './components/ExperienceModal';
+import DisplayExperience from './components/DisplayExperience';
 
 function App() {
   const [generalInfo, setGeneralInfo] = useState({
@@ -22,13 +25,23 @@ function App() {
     schoolAdditional: ''
   });
 
+  const [expInfo, setExpInfo] = useState({
+    expName: '',
+    expTitle: '',
+    expStart: '',
+    expEnd: '',
+    expAdditional: ''
+  });
+
   const [submissions, setSubmissions] = useState([]);
+  const [expSubmissions, setExpSubmissions] = useState([]);
   const [isEditing, setIsEditing] = useState(null);
-  const [showModa, setShowModal] = useState(false);
+  const [showEduModal, setShowEduModal] = useState(false);
+  const [showExpModal, setShowExpModal] = useState(false);
 
   const changeGenData = (e) => {
     const { name, value } = e.target;
-    setGeneralInfo((prevState) => ({
+    setGeneralInfo(prevState => ({
       ...prevState,
       [name]: value,
     }));
@@ -36,12 +49,11 @@ function App() {
 
   const generalSubmit = (e) => {
     e.preventDefault();
-    setShowModal(true);
   };
 
   const changeEduData = (e) => {
     const { name, value } = e.target;
-    setEduInfo((prevState) => ({
+    setEduInfo(prevState => ({
       ...prevState,
       [name]: value,
     }));
@@ -64,89 +76,107 @@ function App() {
       schoolEnd: '',
       schoolAdditional: ''
     });
+    setShowEduModal(false);
   };
 
   const editSubmission = (index) => {
     setIsEditing(index);
     setEduInfo(submissions[index]);
+    setShowEduModal(true);
   };
+
 
   const deleteSubmission = (index) => {
     setSubmissions(submissions.filter((_, i) => i !== index));
   };
 
+  const changeExpData = (e) => {
+    const { name, value } = e.target;
+    setExpInfo(prevState => ({
+      ...prevState,
+      [name]: value,
+    }));
+  };
+
+  const expSubmit = (e) => {
+    e.preventDefault();
+    if (isEditing !== null) {
+      setExpSubmissions(expSubmissions.map((submission, index) =>
+        index === isEditing ? expInfo : submission
+      ));
+      setIsEditing(null);
+    } else {
+      setExpSubmissions([...expSubmissions, expInfo]);
+    }
+    setExpInfo({
+      expName: '',
+      expTitle: '',
+      expStart: '',
+      expEnd: '',
+      expAdditional: ''
+    });
+    setShowExpModal(false);
+  };
+
+  const editExpSubmission = (index) => {
+    setIsEditing(index);
+    setExpInfo(expSubmissions[index]);
+    setShowExpModal(true);
+  };
+
+  const deleteExpSubmission = (index) => {
+    setExpSubmissions(expSubmissions.filter((_, i) => i !== index));
+  };
 
   return (
-    <>
     <div className='container'>
       <div id="left" className="formDiv">
-      <FormGeneral
-        generalInfo={generalInfo}
-        onChange={changeGenData}
-        onSubmit={generalSubmit}
-      />
-      <FormSchool
-        eduInfo={eduInfo}
-        onChange={changeEduData}
-        onSubmit={eduSubmit}
-        editSubmission={editSubmission}
-        deleteSubmission={deleteSubmission}
+        <FormGeneral
+          generalInfo={generalInfo}
+          onChange={changeGenData}
+          onSubmit={generalSubmit}
+        />
+        <FormSchool
+          eduInfo={eduInfo}
+          onChange={changeEduData}
+          onSubmit={eduSubmit}
+          editSubmission={editSubmission}
+          deleteSubmission={deleteSubmission}
         />
         <SchoolModal
-        eduInfo={eduInfo}
-        editSubmission={editSubmission}
-        deleteSubmission={deleteSubmission}
-        submissions={submissions}
+          eduInfo={eduInfo}
+          editSubmission={editSubmission}
+          deleteSubmission={deleteSubmission}
+          submissions={submissions}
+          showModal={showEduModal}
+          setShowModal={setShowEduModal}
+        />
+
+        <FormExperience
+          expInfo={expInfo}
+          onChange={changeExpData}
+          onSubmit={expSubmit}
+          editExpSubmission={editExpSubmission}
+          deleteExpSubmission={deleteExpSubmission}
+        />
+        <ExperienceModal
+          expSubmissions={expSubmissions}
+          editExpSubmission={editExpSubmission}
+          deleteExpSubmission={deleteExpSubmission}
+          showModal={showExpModal}
+          setShowModal={setShowExpModal}
         />
       </div>
+
       <div id="right" className='resumeDiv'>
         <div className="genInfoDiv">
-        <DisplayGeneral generalInfo={generalInfo}
-        onChange={changeGenData} />
+          <DisplayGeneral style={{color: 'black'}} generalInfo={generalInfo} />
         </div>
-        <DisplaySchool
-        submissions={submissions}
-        editSubmission={editSubmission}
-        deleteSubmission={deleteSubmission}
-         />
-
-
-        <div className='educationInfo'>
-          <div className="eduDiv">
-          <h4>School Name</h4>
-          <h5>School Subject</h5>
-          <p>Start and end date</p>
-          <p>Additional info</p>
-          </div>
-
-          <div className="eduDiv">
-          <h4>School Name</h4>
-          <h5>School Subject</h5>
-          <p>Start and end date</p>
-          <p>Additional info</p>
-          </div>
-          
-        </div>
-
-        <div className="experienceInfo">
-          <div className='expDiv'>
-            <h3>Company Name</h3>
-            <h4>Job Title</h4>
-            <p>Start and end date</p>
-            <p>Responsibilities</p>
-          </div>
-          <div className='expDiv'>
-            <h3>Company Name</h3>
-            <h4>Job Title</h4>
-            <p>Start and end date</p>
-            <p>Responsibilities</p>
-          </div>
-
-        </div>
+        <DisplaySchool submissions={submissions} />
+        <DisplayExperience expSubmissions={expSubmissions} />
       </div>
-      </div>
-    </>
-  )
+    </div>
+  );
 }
 
 export default App;

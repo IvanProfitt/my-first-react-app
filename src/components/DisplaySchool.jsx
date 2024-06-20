@@ -26,8 +26,6 @@ DisplaySchool.propTypes = {
       schoolAdditional: PropTypes.string.isRequired,
     })
   ).isRequired,
-  editSubmission: PropTypes.func.isRequired,
-  deleteSubmission: PropTypes.func.isRequired,
 };
 
 export default DisplaySchool;
